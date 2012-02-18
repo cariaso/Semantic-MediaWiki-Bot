@@ -12,9 +12,27 @@ MediaWiki::Bot::Plugin::Semantic - a plugin for MediaWiki::Bot which interacts w
 
 use MediaWiki::Bot;
 
-my $editor = MediaWiki::Bot->new('Account');
-$editor->login('Account', 'password');
-$editor->cup_get_all('User:Contestant');
+
+                                                                                                                                                                     
+use strict;
+use warnings;
+
+use MediaWiki::Bot;
+use Data::Dumper;
+
+my $bot = MediaWiki::Bot->new('bots.snpedia.com','/');
+my $results = $bot->ask({
+    conditions=>'[[Category:Is a snp]] [[On chromosome::3]]',
+    outs=>['Repute','Magnitude','Chromosome position'],
+    parameters=>'limit=5'
+			}
+    );
+
+my $i = 0;
+foreach my $key (keys %$results) {
+    $i++;
+    print "$i $key ",Dumper $results->{$key};
+}
 
 =head1 DESCRIPTION
 
