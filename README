@@ -1,0 +1,42 @@
+MediaWiki::Bot::Plugin::Semantic
+==========================
+
+This is Semantic, a Mediawiki::Bot plugin designed to for data retrieval from Semantic Mediawiki sites.
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+Some of the test scripts included with this distribution of Semantic
+require a working Internet connection. If the test phase will not
+complete because you do not have access to bots.snpedia.com, you can
+(probably) safely install the module anyway.
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+MediaWiki::API
+
+In addition, you must have MediaWiki::Bot version 1.5.2 or greater for plugin support.
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2012 Michael Cariaso
+
+This library is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This library is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY.  See the GNU General Public License for more
+details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
