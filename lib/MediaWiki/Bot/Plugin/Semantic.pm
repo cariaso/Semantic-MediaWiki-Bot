@@ -16,13 +16,16 @@ use warnings;
 use MediaWiki::Bot;
 use Data::Dumper;
 
-my $bot = MediaWiki::Bot->new('bots.snpedia.com','/');
+my $bot = MediaWiki::Bot->new();
+$bot->set_wiki('bots.snpedia.com','/');
 my $results = $bot->ask({
-    conditions=>'[[Category:Is a snp]] [[On chromosome::3]]',
+    conditions=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]',
     outs=>['Repute','Magnitude','Chromosome position'],
     parameters=>'limit=5'
 			}
     );
+
+# parameters{limit} isn't yet respected, but that seems to be a server side issue
 
 my $i = 0;
 foreach my $key (keys %$results) {
@@ -65,7 +68,6 @@ Ask the query, return the result.
 
 =cut
 
-use Data::Dumper;
 sub ask {
     my $self    = shift;
     my $args    = shift;
