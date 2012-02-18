@@ -3,7 +3,7 @@ MediaWiki::Bot::Plugin::Semantic
 
 This is Semantic, a Mediawiki::Bot plugin designed to for data retrieval from Semantic Mediawiki sites.
 
-USAGE
+SYNOPSIS
 
 my $bot = MediaWiki::Bot->new();
 $bot->set_wiki('bots.snpedia.com','/');
@@ -12,6 +12,9 @@ my $results = $bot->ask({
     outs=>['Repute','Magnitude','Chromosome position'],
                         });
 
+METHODS
+
+  ask
 
 
 INSTALLATION
