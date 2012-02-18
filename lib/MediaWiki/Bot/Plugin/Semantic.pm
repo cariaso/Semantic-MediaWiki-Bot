@@ -32,7 +32,9 @@ foreach my $key (keys %$results) {
 
 =head1 DESCRIPTION
 
-MediaWiki::Bot is a framework that can be used to write Mediawiki bots. MediaWiki::Bot::Plugin::Semantic can be used for data retrieval and reporting bots related to Semantic MediaWiki
+MediaWiki::Bot is a framework that can be used to write Mediawiki
+bots. MediaWiki::Bot::Plugin::Semantic can be used for data retrieval
+and reporting bots related to Semantic MediaWiki
 
 =head1 AUTHOR
 
@@ -44,7 +46,9 @@ Michael Cariaso
 
 =item import()
 
-Calling import from any module will, quite simply, transfer these subroutines into that module's namespace. This is possible from any module which is compatible with MediaWiki/Bot.pm.
+Calling import from any module will, quite simply, transfer these
+subroutines into that module's namespace. This is possible from any
+module which is compatible with MediaWiki/Bot.pm.
 
 =cut
 
