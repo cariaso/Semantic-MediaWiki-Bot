@@ -9,10 +9,6 @@ our $VERSION = '0.1.0';
 MediaWiki::Bot::Plugin::Semantic - a plugin for MediaWiki::Bot which interacts with Semantic MediaWiki websites
 
 =head1 SYNOPSIS
-
-use MediaWiki::Bot;
-
-
                                                                                                                                                                      
 use strict;
 use warnings;
