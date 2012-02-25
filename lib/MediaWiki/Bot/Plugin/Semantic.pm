@@ -2,7 +2,7 @@ package MediaWiki::Bot::Plugin::Semantic;
 
 use strict;
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.1';
 
 =head1 NAME
 
@@ -18,10 +18,9 @@ use Data::Dumper;
 
 my $bot = MediaWiki::Bot->new();
 $bot->set_wiki('bots.snpedia.com','/');
-my $results = $bot->ask({
+my $results = $bot->askargs({
     conditions=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]',
     outs=>['Repute','Magnitude','Chromosome position'],
-    parameters=>'limit=5'
 			}
     );
 
@@ -38,6 +37,8 @@ foreach my $key (keys %$results) {
 MediaWiki::Bot is a framework that can be used to write Mediawiki
 bots. MediaWiki::Bot::Plugin::Semantic can be used for data retrieval
 and reporting bots related to Semantic MediaWiki
+
+https://github.com/cariaso/Semantic-MediaWiki-Bot
 
 =head1 AUTHOR
 
@@ -57,7 +58,7 @@ module which is compatible with MediaWiki/Bot.pm.
 
 sub import {
 	no strict 'refs';
-	foreach my $method (qw/ask/) {
+	foreach my $method (qw/ask askargs/) {
 		*{caller() . "::$method"} = \&{$method};
 	}
 }
@@ -68,7 +69,33 @@ Ask the query, return the result.
 
 =cut
 
+
 sub ask {
+    my $self    = shift;
+    my $args    = shift;
+
+    die("query must be set") unless $args->{query};
+
+    my $askhash = {};
+    $askhash->{action} = $args->{action} || 'ask';
+    $askhash->{query} = $args->{query};
+
+    my $smw = $self->{api};
+    my $response = $smw->api($askhash)
+	|| die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
+
+    return $response->{query}->{results};
+}
+
+
+
+
+
+
+
+
+
+sub askargs {
     my $self    = shift;
     my $args    = shift;
 
@@ -87,5 +114,11 @@ sub ask {
 
     return $response->{query}->{results};
 }
+
+
+
+
+
+
 
 1;

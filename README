@@ -7,14 +7,20 @@ SYNOPSIS
 
 my $bot = MediaWiki::Bot->new();
 $bot->set_wiki('bots.snpedia.com','/');
-my $results = $bot->ask({
+my $results1 = $bot->askargs({
     conditions=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]',
     outs=>['Repute','Magnitude','Chromosome position'],
+                        });
+
+
+my $results2 = $bot->ask({
+    query=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]|?Repute|?On chromosome',
                         });
 
 METHODS
 
   ask
+  askargs
 
 
 INSTALLATION
