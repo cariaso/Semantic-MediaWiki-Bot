@@ -1,7 +1,8 @@
 MediaWiki::Bot::Plugin::Semantic
 ==========================
 
-This is Semantic, a Mediawiki::Bot plugin designed to for data retrieval from Semantic Mediawiki sites.
+This is Semantic, a Mediawiki::Bot plugin designed to for data retrieval from  Semantic Mediawiki ( http://semantic-mediawiki.org/ ).
+
 
 SYNOPSIS
 
