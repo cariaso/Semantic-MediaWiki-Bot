@@ -7,15 +7,29 @@ SYNOPSIS
 
 my $bot = MediaWiki::Bot->new();
 $bot->set_wiki('bots.snpedia.com','/');
-my $results1 = $bot->askargs({
-    conditions=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]',
-    outs=>['Repute','Magnitude','Chromosome position'],
+
+
+my $results1 = $bot->ask({
+    query=>"[[Category:Is a genotype]] [[On chromosome::1]]
+|?Allele1
+|?Allele2
+|limit=500",
                         });
 
 
-my $results2 = $bot->ask({
-    query=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]|?Repute|?On chromosome',
+
+my $results2 = $bot->askargs({
+    conditions=>"[[Category:Is a genotype]] [[On chromosome::1]]",
+    outs=>['Allele1','Allele2'],
                         });
+
+# Output format still reflects the raw JSON response, and is likely to change in the future. 
+
+use Data::Dumper;
+print Dumper $results1;
+print Dumper $results2;
+
+
 
 METHODS
 
