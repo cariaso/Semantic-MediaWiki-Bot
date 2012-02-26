@@ -57,6 +57,20 @@ require a working Internet connection. If the test phase will not
 complete because you do not have access to bots.snpedia.com, you can
 (probably) safely install the module anyway.
 
+
+MINIMAL INSTALL
+
+CPAN can often a trigger a huge dependency cascade. While trying to
+build a bug report for someone else I found this to be a minimal
+path to testing from a fresh amazon cloud image
+
+    sudo yum -y install make cpan perl-JSON git
+    git clone git://github.com/cariaso/Semantic-MediaWiki-Bot.git
+    git clone git://github.com/MediaWiki-Bot/MediaWiki-Bot.git
+    wget http://cpansearch.perl.org/src/EXOBUZZ/MediaWiki-API-0.37/lib/MediaWiki/API.pm -O MediaWiki-Bot/lib/MediaWiki/API.pm
+    export PERL5LIB=MediaWiki-Bot/lib/:Semantic-MediaWiki-Bot/lib/
+    perl Semantic-MediaWiki-Bot/t/02-jdd-test.pl
+
 DEPENDENCIES
 
 This module requires these other modules and libraries:
