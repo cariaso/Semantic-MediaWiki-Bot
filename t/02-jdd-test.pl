@@ -8,7 +8,11 @@ use Data::Dumper;
 # https://rt.cpan.org/Public/Bug/Display.html?id=75296
 
 my $bot = MediaWiki::Bot->new();
-$bot->set_wiki('bots.snpedia.com','/');
+$bot->set_wiki({
+    protocol => 'http',
+    host => 'bots.snpedia.com',
+    path => '/',
+	       });
 
 
 my $results = $bot->ask({

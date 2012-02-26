@@ -6,8 +6,11 @@ This is Semantic, a Mediawiki::Bot plugin designed to for data retrieval from Se
 SYNOPSIS
 
 my $bot = MediaWiki::Bot->new();
-$bot->set_wiki('bots.snpedia.com','/');
-
+$bot->set_wiki({
+    protocol => 'http',
+    host => 'bots.snpedia.com',
+    path => '/',
+                   });
 
 my $results1 = $bot->ask({
     query=>"[[Category:Is a genotype]] [[On chromosome::1]]
