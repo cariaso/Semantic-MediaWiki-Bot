@@ -30,6 +30,9 @@ print Dumper $results1;
 print Dumper $results2;
 
 
+# Requests are still made as uncacheable POSTs instead of cacheable GETs
+# See https://rt.cpan.org/Public/Bug/Display.html?id=75296 for current status
+
 
 METHODS
 
