@@ -1,6 +1,8 @@
 package MediaWiki::Bot::Plugin::Semantic;
 
 use strict;
+use warnings;
+use Carp;
 
 our $VERSION = '0.1.1';
 
@@ -9,34 +11,34 @@ our $VERSION = '0.1.1';
 MediaWiki::Bot::Plugin::Semantic - a plugin for MediaWiki::Bot which interacts with Semantic MediaWiki websites
 
 =head1 SYNOPSIS
-                                                                                                                                                                     
-use strict;
-use warnings;
 
-use MediaWiki::Bot;
-use Data::Dumper;
+    use strict;
+    use warnings;
 
-my $bot = MediaWiki::Bot->new();
-$bot->set_wiki('bots.snpedia.com','/');
-my $results = $bot->askargs({
-    conditions=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]',
-    outs=>['Repute','Magnitude','Chromosome position'],
-			}
-    );
+    use MediaWiki::Bot;
+    use Data::Dumper;
 
-# parameters{limit} isn't yet respected, but that seems to be a server side issue
+    my $bot = MediaWiki::Bot->new();
+    $bot->set_wiki('bots.snpedia.com','/');
+    my $results = $bot->askargs({
+        conditions=>'[[Category:Is a snp]] [[On chromosome::3]] [[Repute::+]]',
+        outs=>['Repute','Magnitude','Chromosome position'],
+                }
+        );
 
-my $i = 0;
-foreach my $key (keys %$results) {
-    $i++;
-    print "$i $key ",Dumper $results->{$key};
-}
+    # parameters{limit} isn't yet respected, but that seems to be a server side issue
+
+    my $i = 0;
+    foreach my $key (keys %$results) {
+        $i++;
+        print "$i $key ",Dumper $results->{$key};
+    }
 
 =head1 DESCRIPTION
 
-MediaWiki::Bot is a framework that can be used to write Mediawiki
+L<MediaWiki::Bot> is a framework that can be used to write Mediawiki
 bots. MediaWiki::Bot::Plugin::Semantic can be used for data retrieval
-and reporting bots related to Semantic MediaWiki
+and reporting bots related to Semantic MediaWiki.
 
 https://github.com/cariaso/Semantic-MediaWiki-Bot
 
@@ -69,56 +71,44 @@ Ask the query, return the result.
 
 =cut
 
-
 sub ask {
-    my $self    = shift;
-    my $args    = shift;
+    my $self = shift;
+    my $args = shift;
+    croak 'query must be set' unless $args->{query};
 
-    die("query must be set") unless $args->{query};
-
-    my $askhash = {};
-    $askhash->{action} = $args->{action} || 'ask';
-    $askhash->{query} = $args->{query};
+    my $askhash = {
+        action => $args->{action} || 'ask',
+        query  => $args->{query},
+    };
 
     my $smw = $self->{api};
-    my $response = $smw->api($askhash)
-	|| die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
+    my $response = $self->{api}->api($askhash)
+        || die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
 
     return $response->{query}->{results};
 }
-
-
-
-
-
-
-
-
 
 sub askargs {
-    my $self    = shift;
-    my $args    = shift;
+    my $self = shift;
+    my $args = shift;
+    croak 'conditions must be set' unless $args->{conditions};
 
-    die("conditions must be set") unless $args->{conditions};
-
-    my $askhash = {};
-    $askhash->{action} = $args->{action} || 'askargs';
-    $askhash->{conditions} = $args->{conditions};
-    $askhash->{printouts} = $args->{printouts} || join('|',@{$args->{outs}});
-    $askhash->{parameters} = $args->{parameters};
-
+    my $askhash = {
+        action      => $args->{action} || 'askargs',
+        conditions  => $args->{conditions},
+        printouts   => $args->{printouts} || join('|', @{ $args->{outs} }),
+        parameters  => $args->{parameters},
+    };
 
     my $smw = $self->{api};
     my $response = $smw->api($askhash)
-	|| die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
+        || die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
 
     return $response->{query}->{results};
 }
 
+=back
 
-
-
-
-
+=cut
 
 1;
