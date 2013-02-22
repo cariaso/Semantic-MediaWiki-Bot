@@ -70,7 +70,7 @@ path to testing from a fresh amazon cloud image
     git clone git://github.com/MediaWiki-Bot/MediaWiki-Bot.git
     wget http://cpansearch.perl.org/src/EXOBUZZ/MediaWiki-API-0.37/lib/MediaWiki/API.pm -O MediaWiki-Bot/lib/MediaWiki/API.pm
     export PERL5LIB=MediaWiki-Bot/lib/:Semantic-MediaWiki-Bot/lib/
-    perl Semantic-MediaWiki-Bot/t/02-jdd-test.pl
+    perl Semantic-MediaWiki-Bot/t/02-jdd-test.t
 
 DEPENDENCIES
 
