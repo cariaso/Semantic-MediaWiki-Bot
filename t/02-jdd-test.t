@@ -4,34 +4,39 @@ use warnings;
 use MediaWiki::Bot;
 use Data::Dumper;
 
-# still uses POST, not GET until this is fixed
-# https://rt.cpan.org/Public/Bug/Display.html?id=75296
-
-my $bot = MediaWiki::Bot->new();
-$bot->set_wiki({
-    protocol => 'http',
-    host => 'bots.snpedia.com',
-    path => '/',
-});
+my $bot = MediaWiki::Bot->new({
+			       protocol => 'http',
+			       host => 'bots.snpedia.com',
+			       path => '/',
+			       debug=>2,
+			      });
 
 
 my $results1 = $bot->ask({
-    query=>"[[Category:Is a genotype]] [[On chromosome::1]]
+			  query=>"[[Category:Is a genotype]] [[On chromosome::1]]
 |?Allele1
 |?Allele2
 |?On chromosome
 |limit=500",
 });
 
-
-
 my $results2 = $bot->askargs({
-    conditions=>"[[Category:Is a genotype]] [[On chromosome::1]]",
-    outs=>['Allele1','Allele2','On chromosome'],
-    #parameters=>'|limit=5',
-});
-print Dumper $results1;
-print Dumper $results2;
+			      conditions=>join("|", ("Category:Is a genotype","On chromosome::3", "Allele1::T")),
+			      outs=>['Allele1','Allele2','On chromosome','Summary','Magnitude'],
+			      parameters=>'|limit=100000|sort=Magnitude|order=desc',
+			     });
+#print Dumper $results2;
+
+print scalar keys %$results2,"\n";
+#exit;
+foreach my $key (keys %$results2) {
+  print "$key\n";
+  foreach my $field (keys %{$results2->{$key}->{printouts}}) {
+    print "  $field\t",@{$results2->{$key}->{printouts}->{$field}},"\n";
+
+  }
+  #print Dumper $results2->{$key}->{printouts};
+}
 
 __END__
 my $i = 0;
