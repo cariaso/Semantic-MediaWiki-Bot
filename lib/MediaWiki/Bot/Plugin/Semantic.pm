@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Carp;
 
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError) ;
+
 our $VERSION = '0.1.1';
 
 =head1 NAME
@@ -76,12 +78,20 @@ sub _get_order {
     my ($self, $response) = @_;
 
     my $rawresponse = $self->{api}->{response}->{_content};
-    unless ($rawresponse) {return undef};
+    if ($self->{api}->{response}->{_headers}->{'content-encoding'} eq 'gzip') {
+	#print "Dealing with gzipped\n";
+	gunzip \$self->{api}->{response}->{_content} => \$rawresponse;
+    }
+    unless ($rawresponse) {
+	print "****No Raw Response? returning random ordering******\n";
+	return [keys %{$self->{api}->{response}}];
+	#return undef
+    };
 
-    my @allorderedstrings = $rawresponse =~ /"([^"]*)"/g;
+    my @allorderedkeys = $rawresponse =~ /"([^"]*)"\s*:\s*\{/sg;
     my @orderedkeys = ();
     my %seen = ();
-    foreach my $string (@allorderedstrings) {
+    foreach my $string (@allorderedkeys) {
 	if ($response->{query}->{results}->{$string} &&!$seen{$string}) {
 	    $seen{$string}++;
 	    push @orderedkeys, $string;
