@@ -65,6 +65,32 @@ sub import {
 	}
 }
 
+=item _get_order($self, $response)
+
+Return the order of the results
+
+=cut
+
+
+sub _get_order {
+    my ($self, $response) = @_;
+
+    my $rawresponse = $self->{api}->{response}->{_content};
+    unless ($rawresponse) {return undef};
+
+    my @allorderedstrings = $rawresponse =~ /"([^"]*)"/g;
+    my @orderedkeys = ();
+    my %seen = ();
+    foreach my $string (@allorderedstrings) {
+	if ($response->{query}->{results}->{$string} &&!$seen{$string}) {
+	    $seen{$string}++;
+	    push @orderedkeys, $string;
+	}
+    }
+    return \@orderedkeys;
+}
+
+
 =item ask($params)
 
 Ask the query, return the result.
@@ -85,8 +111,13 @@ sub ask {
     my $response = $self->{api}->api($askhash)
         || die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
 
-    return $response->{query}->{results};
+    my $order = _get_order($self, $response);
+    $response->{query}->{order} = $order;
+
+    return $response;
 }
+
+
 
 sub askargs {
     my $self = shift;
@@ -104,7 +135,11 @@ sub askargs {
     my $response = $smw->api($askhash)
         || die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
 
-    return $response->{query}->{results};
+
+    my $order = _get_order($self, $response);
+    $response->{query}->{order} = $order;
+
+    return $response;
 }
 
 =back
