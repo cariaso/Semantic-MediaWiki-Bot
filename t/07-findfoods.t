@@ -6,7 +6,7 @@ use Data::Dumper;
 
 my $bot = MediaWiki::Bot->new({
 			       protocol => 'http',
-			       host => 'http://foodfinds.referata.com/',
+			       host => 'foodfinds.referata.com',
 			       path => 'w/',
 			       debug=>2,
 			      });
