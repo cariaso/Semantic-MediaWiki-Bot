@@ -77,15 +77,18 @@ Return the order of the results
 sub _get_order {
     my ($self, $response) = @_;
 
-    my $rawresponse = $self->{api}->{response}->{_content};
-    if ($self->{api}->{response}->{_headers}->{'content-encoding'} eq 'gzip') {
-	#print "Dealing with gzipped\n";
+    my $rawresponse;
+
+    my $encoding = $self->{api}->{response}->{_headers}->{'content-encoding'} || '';
+    if ($encoding eq 'gzip') {
 	gunzip \$self->{api}->{response}->{_content} => \$rawresponse;
+    } else {
+	$rawresponse = $self->{api}->{response}->{_content};
     }
+
     unless ($rawresponse) {
 	print "****No Raw Response? returning random ordering******\n";
 	return [keys %{$self->{api}->{response}}];
-	#return undef
     };
 
     my @allorderedkeys = $rawresponse =~ /"([^"]*)"\s*:\s*\{/sg;
