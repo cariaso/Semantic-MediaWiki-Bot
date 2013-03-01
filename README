@@ -6,6 +6,76 @@ This is Semantic, a Mediawiki::Bot plugin designed to for data retrieval from  S
 
 SYNOPSIS
 
+
+my $hostname = 'localhost';
+my $botparams = {
+		 protocol => 'http',
+		 host => $hostname,
+		 path => '/',
+
+		};
+
+my $bot = MediaWiki::Bot->new($botparams);
+
+
+my $title = 'Other Page';
+my $beforetext = $bot->get_text($title);
+
+my $addendum = "*More Text\n";
+my $newtext = $beforetext . $addendum;
+
+my $login = $bot->login({
+		 username    => $username,
+		 password    => $password,
+		}) or die("unable to login");
+
+
+$response = $bot->edit({
+        page    => $title,
+        text    => $text,
+        summary => 'Adding new content',
+    });
+
+
+
+foreach my $title ('Larry',
+		   'Moe',
+		   'Curly') {
+  $text = "[[Stooge::Yes]]\n";
+
+  $response = $bot->edit({
+    			  page    => $title,
+			  Text    => $text,
+			  summary => 'Adding new content',
+			 });
+
+}
+
+
+
+
+my $results1 = $bot->ask({
+			  format=>'simplified',
+			  query=>"[[Stooge::+]]
+|?Stooge
+",
+});
+
+ok $results1 , "got a response from $hostname";
+
+foreach my $row (@$results1) {
+	print Dumper $row;
+}
+
+
+
+
+
+
+
+
+
+
 my $bot = MediaWiki::Bot->new();
 $bot->set_wiki({
     protocol => 'http',
@@ -22,20 +92,12 @@ my $results1 = $bot->ask({
 
 
 
-my $results2 = $bot->askargs({
-    conditions=>"[[Category:Is a genotype]] [[On chromosome::1]]",
-    outs=>['Allele1','Allele2'],
-                        });
-
 # Output format still reflects the raw JSON response, and is likely to change in the future. 
 
 use Data::Dumper;
 print Dumper $results1;
 print Dumper $results2;
 
-
-# Requests are still made as uncacheable POSTs instead of cacheable GETs
-# See https://rt.cpan.org/Public/Bug/Display.html?id=75296 for current status
 
 
 METHODS
