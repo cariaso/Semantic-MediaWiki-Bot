@@ -1,18 +1,21 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 11;
 
-use MediaWiki::Bot;
+BEGIN {
+    use_ok('MediaWiki::Bot');
+}
 use Data::Dumper;
 
+my $hostname = 'foodfinds.referata.com';
+my $botparams = {
+		 protocol => 'http',
+		 host => $hostname,
+		 path => 'w/',
+		};
 
-my $bot = MediaWiki::Bot->new({
-			       protocol => 'http',
-			       host => 'foodfinds.referata.com',
-			       path => 'w/',
-			      });
-
+my $bot = new_ok('MediaWiki::Bot' => [$botparams]);
 
 
 my $results1 = $bot->ask({
@@ -22,6 +25,7 @@ my $results1 = $bot->ask({
 ",
 });
 
+ok $results1 , "got a response from $hostname";
 
 my $num_italian = 0;
 my $num_cambodian = 0;

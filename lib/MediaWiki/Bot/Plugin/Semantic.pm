@@ -94,10 +94,13 @@ sub _get_order {
     my @allorderedkeys = $rawresponse =~ /"([^"]*)"\s*:\s*\{/sg;
     my @orderedkeys = ();
     my %seen = ();
-    foreach my $string (@allorderedkeys) {
-	if ($response->{query}->{results}->{$string} &&!$seen{$string}) {
-	    $seen{$string}++;
-	    push @orderedkeys, $string;
+
+    if (ref $response->{query}->{results} eq 'HASH') {
+	foreach my $string (@allorderedkeys) {
+	    if ($response->{query}->{results}->{$string} &&!$seen{$string}) {
+		$seen{$string}++;
+		push @orderedkeys, $string;
+	    }
 	}
     }
     return \@orderedkeys;
