@@ -73,7 +73,7 @@ Return the order of the results
 
 =cut
 
-
+use Data::Dumper;
 sub _get_order {
     my ($self, $response) = @_;
 

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use MediaWiki::Bot;
 use Data::Dumper;
@@ -69,3 +69,45 @@ foreach my $row (@$results_california) {
 
 
 ok $num_mexican > $num_french, "California has more Mexican than French resturants";
+
+
+
+my $results_simple = $bot->ask({
+			  format=>'simplified',
+			  query=>"[[Category:All Good Eats]] [[City::San Francisco]]
+|?Cuisine
+",
+});
+
+
+
+
+
+my $simple_ppq_name = 'PPQ Dungeness Island';
+my $simple_ppq_cuisine = 'default not found';
+foreach my $row (@$results_simple) {
+  next unless $row->{_title} =~ /$simple_ppq_name/;
+  ok $row->{Cuisine} =~ /Vietnamese/i, "$simple_ppq_name is a Vietnamese resturant";
+  $simple_ppq_cuisine = $row->{Cuisine};
+}
+
+
+
+my $results_complex = $bot->ask({
+			  query=>"[[Category:All Good Eats]] [[City::San Francisco]]
+|?Cuisine
+",
+});
+
+
+foreach my $key (keys %{$results_complex->{query}->{results}}) {
+  my $obj = $results_complex->{query}->{results}->{$key};
+  next unless $obj->{fulltext} =~ /$simple_ppq_name/;
+
+  my $foundall = 1;
+  foreach my $cuisine (@{$obj->{printouts}->{Cuisine}}) {
+    my $name = $cuisine->{fulltext};
+    $foundall &= $simple_ppq_cuisine =~ /$name/;
+  }
+  ok $foundall, "simple and complex agree about the cuisines at $simple_ppq_name : ($simple_ppq_cuisine)";
+}
