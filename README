@@ -32,7 +32,7 @@ my $login = $bot->login({
 
 $response = $bot->edit({
         page    => $title,
-        text    => $text,
+        text    => $newtext,
         summary => 'Adding new content',
     });
 
@@ -41,7 +41,7 @@ $response = $bot->edit({
 foreach my $title ('Larry',
 		   'Moe',
 		   'Curly') {
-  $text = "[[Stooge::Yes]]\n";
+  my $text = "[[Stooge::Yes]]\n";
 
   $response = $bot->edit({
     			  page    => $title,
