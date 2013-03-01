@@ -108,7 +108,12 @@ sub _get_order {
 
 Ask the query, return the result.
 
+Do a Dumper to consider if you prefer using the 
+ format => 'simplified'
+
 =cut
+
+use Data::Dumper;
 
 sub ask {
     my $self = shift;
@@ -124,12 +129,30 @@ sub ask {
     my $response = $self->{api}->api($askhash)
         || die $smw->{error}->{code} . ': ' . $smw->{error}->{details};
 
+
     my $order = _get_order($self, $response);
     $response->{query}->{order} = $order;
 
-    return $response;
+    if ($args->{format} && $args->{format} eq 'simplified') {
+	return simplify($response);
+    } else {
+
+	return $response;
+
+    }
 }
 
+
+=item askargs($params)
+
+Ask the query, return the result.
+
+alternative interface. I don't see much value in it. 
+
+Do a Dumper to consider if you prefer using the 
+ format => 'simplified'
+
+=cut
 
 
 sub askargs {
@@ -152,11 +175,48 @@ sub askargs {
     my $order = _get_order($self, $response);
     $response->{query}->{order} = $order;
 
-    return $response;
+    if ($args->{format} && $args->{format} eq 'simplified') {
+	return simplify($response);
+    } else {
+
+	return $response;
+
+    }
 }
 
-=back
+=item simplify($results)
+
+Turn the result of an ask() into an flatter, eaiser to work with structure. 
 
 =cut
+
+
+
+sub simplify {
+  my $results1 = shift;
+  my @out = ();
+  foreach my $key  (@{$results1->{query}->{order}}) {
+      my $element = {
+	  _title => $key,
+      };
+      my $printouts = $results1->{query}->{results}->{$key}->{printouts};
+      foreach my $field (keys %$printouts) {
+	  my @extra;
+	  foreach my $val (@{$printouts->{$field}}) {
+	      my $extra;
+	      if (ref($val) && exists $val->{fulltext}) {
+		  $extra = $val->{fulltext};
+	      } else {
+		  $extra = $val;
+	      }
+	      push @extra, $extra;
+	  }
+	  $element->{$field} = join(', ',@extra);
+      }
+      push @out, $element;
+  }
+  return \@out;
+}
+
 
 1;

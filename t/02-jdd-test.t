@@ -8,7 +8,6 @@ my $bot = MediaWiki::Bot->new({
 			       protocol => 'http',
 			       host => 'bots.snpedia.com',
 			       path => '/',
-			       debug=>2,
 			      });
 
 
